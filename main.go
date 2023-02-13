@@ -2,10 +2,17 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"log"
+	"context"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 	"github.com/arrestle/openfood_api/pkg/models"
+
+	"github.com/kr/pretty"
+	"googlemaps.github.io/maps"
+
 )
 
 
@@ -36,5 +43,30 @@ func main() {
 		fmt.Println(user)
 		//db.Delete(&user)
 	}
+
+	apiKey := os.Getenv("GEOCODETOKEN")
+	if apiKey == "" {
+		fmt.Println("API_KEY environment variable not set")
+		return
+	}
+
+	fmt.Println("API Key:", apiKey)
+	c, err := maps.NewClient(maps.WithAPIKey(apiKey))
+	if err != nil {
+		log.Fatalf("fatal error: %s", err)
+	}
+
+	address := "403 West Whitaker Mill Road, Raleigh, NC 27608"
+
+	r := &maps.GeocodingRequest{
+		Address: address}
+
+	resp, err := c.Geocode(context.Background(), r)
+
+	if err != nil {
+		log.Fatalf("fatal error: %s", err)
+	}
+
+	pretty.Println(resp[0].Geometry.Location);
 
 }
