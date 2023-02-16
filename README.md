@@ -1,5 +1,5 @@
  openfood api
 
 ```bash
-go mod edit -replace github.com/arrestle/openfood_api=/Users/home/repo/gorm1  
+go mod edit -replace github.com/arrestle/openfood_api=/Users/home/repo/openfood_api
 ```
